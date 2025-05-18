@@ -36,14 +36,29 @@ def main():
                 return
             
         dt = clock.tick(60)/1000  
+        sprites_to_kill = set()
+        sprites_to_quit = False
         #Update all game objects     
         updatable.update(dt)
         # Collision detection
         for asteroid in asteroids:
-            if player.check_collision(asteroid):
-                print("Game over!")
-                pygame.quit()
-                return
+            for shot in shots: 
+                if player.check_collision(asteroid):
+                    sprites_to_quit = True
+                if asteroid.check_collision(shot):
+                    sprites_to_kill.add(asteroid)
+                    sprites_to_kill.add(shot)
+        for sprite_kill in sprites_to_kill:    
+            sprite_kill.kill()
+       
+        if sprites_to_quit:            
+            print("Game over!")
+            pygame.quit()
+                    
+                    
+
+                    
+                
         # Draw everything    
         screen.fill(color = (0, 0, 0), rect=None, special_flags=0)
         for obj in drawable:
